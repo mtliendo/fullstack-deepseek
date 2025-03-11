@@ -6,6 +6,7 @@ import Home from './pages/Home.tsx'
 import Secondary from './pages/Secondary.tsx'
 import Navbar from './components/Navbar.tsx'
 import Footer from './components/Footer.tsx'
+import DeepSeekManual from './pages/DeepSeekManual.tsx'
 // import Protect from './components/Protect.tsx'
 
 createRoot(document.getElementById('root')!).render(
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')!).render(
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/secondary" element={<Secondary />} />
+				<Route path="/deepseek-manual" element={<DeepSeekManual />} />
 			</Routes>
 			<Footer />
 		</BrowserRouter>

@@ -10,7 +10,7 @@ function Home() {
 						<p className="py-6">
 							Fullstack DeepSeek application built with React, and AWS Amplify.
 						</p>
-						<Link to="/secondary" className="btn btn-primary">
+						<Link to="/deepseek-manual" className="btn btn-primary">
 							Get Started
 						</Link>
 					</div>
