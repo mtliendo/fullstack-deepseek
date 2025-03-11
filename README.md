@@ -1,54 +1,84 @@
-# React + TypeScript + Vite
+# DeepSeek Integration with AWS Bedrock
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project demonstrates a fullstack solution for integrating DeepSeek's language model with AWS services using the newly announced AWS Bedrock integration. It showcases both synchronous and streaming interactions with DeepSeek's model through a serverless architecture.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Serverless Architecture**: Built using AWS Amplify, Lambda, AppSync, and Bedrock
+- **Cross-Region Inference**: Automatically routes requests to different AWS regions during peak hours for optimal latency
+- **Dual Interaction Modes**:
+  - Synchronous responses for quick queries
+  - Real-time streaming for longer interactions
+- **Modern Frontend**: Built with React (Vite) and DaisyUI for a beautiful user experience
+- **Secure Authentication**: Integrated with Amazon Cognito for user management
 
-## Expanding the ESLint configuration
+## Architecture
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+![architecture](./architecture.excalidraw.png)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### Backend Components
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **AWS Amplify**: Manages the infrastructure and deployment
+- **AWS Lambda**:
+  - `bedrockToDeepSeekSync`: Handles synchronous DeepSeek model interactions
+  - `bedrockToDeepSeekStream`: Manages streaming responses with real-time updates
+- **AWS AppSync**: Provides GraphQL API and real-time capabilities
+- **AWS AppSync Event**: Realtime, standalone websocket
+- **Amazon Bedrock**: Serverless access to DeepSeek's language model
+- **Amazon Cognito**: User authentication and authorization
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Frontend Components
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- **React + Vite**: Modern frontend framework
+- **React Router**: Client-side routing
+- **DaisyUI**: Tailwind CSS component library
+- **AWS Amplify Client Libraries**: Seamless integration with backend services
+
+## Key Benefits
+
+1. **Serverless Operation**: No need to manage or host DeepSeek models
+2. **Cost Efficiency**: Pay-per-use model with AWS Bedrock
+3. **High Availability**: Cross-region inference ensures reliable performance
+4. **Real-time Capabilities**: Streaming responses for interactive experiences
+5. **Enterprise-Grade Security**: Built-in authentication and authorization
+
+## Prerequisites
+
+- Node.js and npm
+- AWS Account
+- AWS Amplify CLI
+- Basic knowledge of React and AWS services
+
+## Getting Started
+
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Initialize Amplify:
+   ```bash
+   npx ampx sandbox
+   ```
+
+## Environment Configuration
+
+The application requires the following environment variables:
+
+- AWS Region configuration
+- Bedrock model endpoints
+- AppSync API endpoints
+- Cognito user pool settings
+
+These are automatically configured by AWS Amplify during deployment.
+
+## Security
+
+- All interactions with DeepSeek models are authenticated
+- Cross-region requests are secured with IAM roles
+- User data is protected through Cognito integration
+- Real-time events are secured with user pool authentication
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
