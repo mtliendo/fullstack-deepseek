@@ -1,7 +1,7 @@
 import { defineFunction } from '@aws-amplify/backend'
 
-export const bedrockToDeepSeek = defineFunction({
-	name: 'bedrock-to-deepseek',
+export const bedrockToDeepSeekSync = defineFunction({
+	name: 'bedrock-to-deepseek-sync',
 	resourceGroupName: 'data',
 	entry: './main.ts',
 	timeoutSeconds: 29,

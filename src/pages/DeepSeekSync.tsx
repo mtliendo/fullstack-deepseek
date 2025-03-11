@@ -1,5 +1,13 @@
 import { useState } from 'react'
 import Chat, { Message } from '../components/Chat'
+import { generateClient } from '@aws-amplify/api'
+import { Schema } from '../../amplify/data/resource'
+
+function stripMarkdownFence(text: string) {
+	return text.replace(/^\s*```(?:markdown|md)\n?([\s\S]*?)\n?```$/, '$1')
+}
+
+const client = generateClient<Schema>()
 
 function DeepSeekManual() {
 	const [messages, setMessages] = useState<Message[]>([])
@@ -16,17 +24,22 @@ function DeepSeekManual() {
 		setMessages((prev) => [...prev, userMessage])
 		setIsLoading(true)
 
-		// Mock AI response (simulate API call)
-		setTimeout(() => {
-			const aiMessage: Message = {
-				id: (Date.now() + 1).toString(),
-				content: `This is a mock response to: "${content}"`,
+		const response = await client.queries.bedrockToDeepSeekSync({
+			text: content,
+		})
+		console.log('response', response)
+		const strippedResponse = stripMarkdownFence(response.data!)
+		console.log('strippedResponse', strippedResponse)
+		setIsLoading(false)
+		setMessages((prev) => [
+			...prev,
+			{
+				id: Date.now().toString(),
+				content: strippedResponse,
 				sender: 'ai',
 				timestamp: new Date(),
-			}
-			setMessages((prev) => [...prev, aiMessage])
-			setIsLoading(false)
-		}, 1000)
+			},
+		])
 	}
 
 	return (
@@ -36,7 +49,7 @@ function DeepSeekManual() {
 					messages={messages}
 					onSendMessage={handleSendMessage}
 					isLoading={isLoading}
-					title="Chat with DeepSeek AI"
+					title="Chat with DeepSeek AI (Sync)"
 				/>
 			</div>
 		</div>

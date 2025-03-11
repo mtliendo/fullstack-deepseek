@@ -1,7 +1,7 @@
 import { useState, FormEvent } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeHighlight from 'rehype-highlight'
-import 'highlight.js/styles/github-dark.css'
+import 'highlight.js/styles/github.css'
 
 export interface Message {
 	id: string
@@ -10,19 +10,21 @@ export interface Message {
 	timestamp: Date
 }
 
-interface ChatProps {
+interface StreamingChatProps {
 	messages: Message[]
 	onSendMessage: (message: string) => Promise<void>
 	isLoading: boolean
+	streamingContent: string
 	title?: string
 }
 
-function Chat({
+function StreamingChat({
 	messages,
 	onSendMessage,
 	isLoading,
+	streamingContent,
 	title = 'Chat',
-}: ChatProps) {
+}: StreamingChatProps) {
 	const [inputMessage, setInputMessage] = useState('')
 
 	const handleSubmit = async (e: FormEvent) => {
@@ -33,6 +35,17 @@ function Chat({
 		setInputMessage('')
 	}
 
+	// Combine regular messages with streaming content if present
+	const displayMessages = [...messages]
+	if (streamingContent) {
+		displayMessages.push({
+			id: 'streaming',
+			content: streamingContent,
+			sender: 'ai',
+			timestamp: new Date(),
+		})
+	}
+
 	return (
 		<div className="card bg-base-100 shadow-xl">
 			<div className="card-body">
@@ -40,7 +53,7 @@ function Chat({
 
 				{/* Messages container */}
 				<div className="h-[60vh] overflow-y-auto mb-4 space-y-4">
-					{messages.map((message) => (
+					{displayMessages.map((message) => (
 						<div
 							key={message.id}
 							className={`chat ${
@@ -57,22 +70,16 @@ function Chat({
 										: 'chat-bubble-secondary'
 								}`}
 							>
-								{message.sender === 'user' ? (
-									<ReactMarkdown rehypePlugins={[rehypeHighlight]}>
-										{message.content}
-									</ReactMarkdown>
-								) : (
-									<ReactMarkdown rehypePlugins={[rehypeHighlight]}>
-										{message.content}
-									</ReactMarkdown>
-								)}
+								<ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+									{message.content}
+								</ReactMarkdown>
 							</div>
 							<div className="chat-footer opacity-50">
 								{message.timestamp.toLocaleTimeString()}
 							</div>
 						</div>
 					))}
-					{isLoading && (
+					{isLoading && !streamingContent && (
 						<div className="chat chat-start">
 							<div className="chat-bubble chat-bubble-secondary">
 								<span className="loading loading-dots loading-sm"></span>
@@ -104,4 +111,4 @@ function Chat({
 	)
 }
 
-export default Chat
+export default StreamingChat
